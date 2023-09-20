@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Location - Demo</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="containerLocation">
+        <div class="userLocation">
+            <h2>Your Location Details</h2>
+            <p>Latitude: <span id="latitude"></span></p>
+            <p>Longitude: <span id="longitude"></span></p>
+            <p>City: <span id="city"></span></p>
+        </div>
+        <div class="discription">
+            <h1>Notice</h1>
+            <ul class="discp">
+                <li class="rules"><i class="rulesPin fas fa-thumbtack"></i> The "Pinned" service center is the one with the shortest distance among all others.</li>
+                <li class="rules">The listed service centers are the ones available within a 200 km radius of your location.</li>
+                <li class="rules">The location listed here represents the city name of each service center.</li>
+            </ul>
+        </div>
+        <ul class="centerList" id="serviceCenters">
+            <!-- Service center details -->
+            <li class="service">
+                <div class="innerLi">
+                    <div class="count">#1</div>
+                    <ul class="details">
+                        <li class="detailsList">Name: <span>Service Center 1</span> </li>
+                        <li class="detailsList">Phone number: <span>9988776655</span></li>
+                        <li class="detailsList">Distance: <span>50 Km</span></li>
+                        <li class="detailsList">Location: <span>Avadi</span></li>
+                    </ul>
+                </div>
+            </li>
+
+            <li class="service active">
+                <div class="innerLi">
+                    <div class="tag"><i class="pin fas fa-thumbtack"></i></div>
+                    <div class="count">#2</div>
+                    <ul class="details">
+                        <li class="detailsList">Name: <span>Service Center 2</span> </li>
+                        <li class="detailsList">Phone number: <span>9988776655</span></li>
+                        <li class="detailsList">Distance: <span>10 Km</span></li>
+                        <li class="detailsList">Location: <span>Poonamallee</span></li>
+                    </ul>
+                </div>
+            </li>
+
+            <li class="service">
+                <div class="innerLi">
+                    <div class="count">#3</div>
+                    <ul class="details">
+                        <li class="detailsList">Name: <span>Service Center 3</span> </li>
+                        <li class="detailsList">Phone number: <span>9988776655</span></li>
+                        <li class="detailsList">Distance: <span>90 Km</span></li>
+                        <li class="detailsList">Location: <span>Tambaram</span></li>
+                    </ul>
+                </div>
+            </li>
+
+            <li class="service">
+                <div class="innerLi">
+                    <div class="count">#4</div>
+                    <ul class="details">
+                        <li class="detailsList">Name: <span>Service Center 4</span> </li>
+                        <li class="detailsList">Phone number: <span>9988776655</span></li>
+                        <li class="detailsList">Distance: <span>160 Km</span></li>
+                        <li class="detailsList">Location: <span>Red Hills</span></li>
+                    </ul>
+                </div>
+            </li>
+
+            <li class="service">
+                <div class="innerLi">
+                    <div class="count">#5</div>
+                    <ul class="details">
+                        <li class="detailsList">Name: <span>Service Center 5</span> </li>
+                        <li class="detailsList">Phone number: <span>9988776655</span></li>
+                        <li class="detailsList">Distance: <span>190 Km</span></li>
+                        <li class="detailsList">Location: <span>Thiruvallur</span></li>
+                    </ul>
+                </div>
+            </li>
+
+        </ul>
+    </div>
+
+    <script>
+        // Function to find user's location
+        function getUserLocation() {
+            if ("geolocation" in navigator) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    const latitude = position.coords.latitude;
+                    const longitude = position.coords.longitude;
+
+                    // Update the HTML elements with the location details
+                    document.getElementById("latitude").textContent = latitude.toFixed(6);
+                    document.getElementById("longitude").textContent = longitude.toFixed(6);
+
+                    // Reverse geocoding to get an approximate city name based on the coordinates
+                    fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            const city = data.address.city || data.address.town || data.address.village || data.address.hamlet;
+                            document.getElementById("city").textContent = city;
+                        })
+                        .catch(error => {
+                            console.error("Error fetching city name:", error);
+                        });
+                });
+            } else {
+                console.error("Geolocation is not available in your browser.");
+            }
+        }
+
+        // Call the function to get user location
+        getUserLocation();
+    </script>
+</body>
+</html>
